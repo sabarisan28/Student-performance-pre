@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Insights 🌈</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="/static/css/Teacher Insights.css">
+    <link rel="stylesheet" href="/static/js/subject-analysis.js">
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <script src="/static/js/navbar.js"></script>
+    <link rel="stylesheet" href="/static/css/footer.css">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="index.html">Student Analyzer</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/dashboard">🏠 Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="/student-profile">👩‍🎓 Student Management</a></li>
+                <li class="nav-item"><a class="nav-link" href="/subject-analysis">📘 Subject Analysis</a></li>
+                <li class="nav-item"><a class="nav-link" href="/comparison">📈 Comparison</a></li>
+                <li class="nav-item"><a class="nav-link" href="/prediction">🧮 Prediction</a></li>
+                <li class="nav-item"><a class="nav-link" href="/reports">📊 Reports</a></li>
+                <li class="nav-item"><a class="nav-link" href="/teacher-insights">🧑‍🏫 Teacher Insights</a></li>
+                <li class="nav-item"><a class="nav-link" href="/trends">🗓️ Trend</a></li>
+            </ul>
+        </div>
+        </div>
+    </nav>
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="main-title display-4 mb-3">Student Progress & Scores</h1>
+            <p class="subtitle lead mb-4">Click a month to input or view student scores.</p>
+        </div>
+        <div class="circle" id="circle">
+            <div class="center-info" id="centerInfo"><h2 class="h4 mb-0">2025</h2></div>
+        </div>
+        <div id="scoreSection" class="score-section d-none">
+            <h2 id="scoreMonth" class="section-title text-center mb-4 display-5"></h2>
+            <div class="btn-group-custom text-center mb-4">
+                <button class="btn btn-primary"   onclick="showInput('Quiz')">Quiz</button>
+                <button class="btn btn-success"  onclick="showInput('Midterm')">Midterm</button>
+                <button class="btn btn-warning"  onclick="showInput('Exam')">Exam</button>
+                <button class="btn btn-danger"   onclick="showInput('Final Exam')">Final Exam</button>
+            </div>
+            <div id="inputSection" class="input-section d-none">
+                <h3 id="inputTitle" class="section-title text-center mb-4 h3"></h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="h5 fw-semibold mb-3 text-primary">Term 1</h4>
+                        <div id="term1Inputs" class="row g-3"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="h5 fw-semibold mb-3 text-primary">Term 2</h4>
+                        <div id="term2Inputs" class="row g-3"></div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary me-3 px-4 py-2" onclick="saveScores()">Save</button>
+                    <button class="btn btn-secondary px-4 py-2" onclick="clearInputs()">Clear</button>
+                </div>
+            </div>
+            <div id="savedSection" class="d-none mt-5">
+                <h3 class="section-title text-center mb-4 h3">Saved Scores</h3>
+                <div id="savedTable" class="row g-4"></div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="/trends" class="btn-compare">
+                Compare Term
+            </a>
+            <a href="#" class="btn-compare ms-3" onclick="compareMonthlyScores(); return false;">
+                Compare Score of Month
+            </a>
+        </div>
+    </div>
+    <footer class="text-center mt-5">
+        <hr>
+        <p>© 2025 Student Analyzer | Confidential Report</p>
+        <p>
+        <a href="index.html">Home</a> | 
+        <a href="reports.html">Reports</a> | 
+        <a href="contact.html">Contact</a>
+        </p>
+        <p class="social-icons">
+        <a href="#" title="Facebook">📘</a>
+        <a href="#" title="Twitter">🐦</a>
+        <a href="#" title="LinkedIn">💼</a>
+        </p>
+        <p>Made with ❤️ by the Student Analyzer Team</p>
+    </footer>
+    <script>
+        const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        const circle = document.getElementById("circle");
+        const centerInfo = document.getElementById("centerInfo");
+        const radius = 170, center = 215;
+        const term1Subjects = ["BCU","English for IT","General English","Logic","PL","Design"];
+        const term2Subjects = ["English for IT","General English","Algorithm","PL","Web Design"];
+        let currentType = "", currentMonth = "";
+        let allData = JSON.parse(localStorage.getItem('studentScores')) || {};
+        function initializeCircle() {
+            months.forEach((month, i) => {
+                const angle = (i / months.length) * 2 * Math.PI - Math.PI/2;
+                const x = center + radius * Math.cos(angle) - 35;
+                const y = center + radius * Math.sin(angle) - 35;
+
+                const div = document.createElement("div");
+                div.className = "month";
+                div.textContent = month;
+                div.style.left = `${x}px`; div.style.top = `${y}px`;
+                const hue = (i * 30) % 360;
+                div.style.background = `linear-gradient(135deg, hsl(${hue},70%,60%), hsl(${(hue+30)%360},70%,50%))`;
+
+                div.addEventListener("mouseover", () => {
+                    centerInfo.innerHTML = `<h2 class="h4 mb-0">${month}</h2>`;
+                    centerInfo.style.background = div.style.background;
+                });
+                div.addEventListener("mouseout", () => {
+                    centerInfo.innerHTML = `<h2 class="h4 mb-0">2025</h2>`;
+                    centerInfo.style.background = "linear-gradient(135deg,#6366f1,#3b82f6)";
+                });
+                div.addEventListener("click", () => {
+                    currentMonth = month;
+                    document.getElementById("scoreSection").classList.remove("d-none");
+                    document.getElementById("scoreMonth").innerText = `Scores for ${month}`;
+                    renderScores();
+                    window.scrollTo({ top: document.getElementById("scoreSection").offsetTop - 100, behavior: "smooth" });
+                });
+                circle.appendChild(div);
+            });
+        }
+        function showInput(type) {
+            currentType = type;
+            document.getElementById("inputSection").classList.remove("d-none");
+            document.getElementById("inputTitle").innerText = type;
+            const term1Div = document.getElementById("term1Inputs");
+            const term2Div = document.getElementById("term2Inputs");
+            term1Div.innerHTML = ""; term2Div.innerHTML = "";
+            const saved = allData[currentMonth]?.[type] || { term1: [], term2: [] };
+
+            term1Subjects.forEach((sub, i) => {
+                const grp = document.createElement("div"); grp.className = "col-12 col-sm-6";
+                const lbl = document.createElement("label"); lbl.className = "form-label small text-muted mb-1"; lbl.textContent = sub;
+                const inp = document.createElement("input"); inp.type = "number"; inp.min = 0; inp.max = 100; inp.placeholder = "0-100";
+                inp.value = saved.term1[i] || ''; inp.className = "form-input-custom";
+                grp.appendChild(lbl); grp.appendChild(inp); term1Div.appendChild(grp);
+            });
+            term2Subjects.forEach((sub, i) => {
+                const grp = document.createElement("div"); grp.className = "col-12 col-sm-6";
+                const lbl = document.createElement("label"); lbl.className = "form-label small text-muted mb-1"; lbl.textContent = sub;
+                const inp = document.createElement("input"); inp.type = "number"; inp.min = 0; inp.max = 100; inp.placeholder = "0-100";
+                inp.value = saved.term2[i] || ''; inp.className = "form-input-custom";
+                grp.appendChild(lbl); grp.appendChild(inp); term2Div.appendChild(grp);
+            });
+        }
+        function saveScores() {
+            const term1 = Array.from(document.querySelectorAll("#term1Inputs input")).map(i => {
+                const v = parseInt(i.value); return isNaN(v) ? 0 : Math.min(100, Math.max(0, v));
+            });
+            const term2 = Array.from(document.querySelectorAll("#term2Inputs input")).map(i => {
+                const v = parseInt(i.value); return isNaN(v) ? 0 : Math.min(100, Math.max(0, v));
+            });
+            if (!allData[currentMonth]) allData[currentMonth] = {};
+            allData[currentMonth][currentType] = { term1, term2 };
+            localStorage.setItem('studentScores', JSON.stringify(allData));
+            renderScores();
+            alert(`Saved ${currentType} scores for ${currentMonth}`);
+        }
+
+        function clearInputs() {
+            document.querySelectorAll("#term1Inputs input, #term2Inputs input").forEach(i => i.value = '');
+        }
+
+        function deleteScore(type) {
+            if (!confirm(`Delete ${type} scores for ${currentMonth}?`)) return;
+            delete allData[currentMonth][type];
+            if (Object.keys(allData[currentMonth]).length === 0) delete allData[currentMonth];
+            localStorage.setItem('studentScores', JSON.stringify(allData));
+            renderScores();
+        }
+
+        function renderScores() {
+            const div = document.getElementById("savedTable"); div.innerHTML = "";
+            const data = allData[currentMonth] || {};
+            if (Object.keys(data).length === 0) {
+                document.getElementById("savedSection").classList.add("d-none");
+                return;
+            }
+            document.getElementById("savedSection").classList.remove("d-none");
+
+            for (const type in data) {
+                const wrapper = document.createElement("div"); wrapper.className = "col-12 col-md-6 col-lg-4";
+                const card = document.createElement("div"); card.className = "saved-item h-100";
+                const header = document.createElement("div");
+                header.className = "d-flex flex-column flex-sm-row justify-content-between align-items-start align-sm-center mb-3 gap-2";
+                header.innerHTML = `<strong class="h6 text-primary mb-0">${type}</strong>`;
+                const btns = document.createElement("div"); btns.className = "d-flex gap-2";
+                const edit = document.createElement("button"); edit.className = "btn btn-warning btn-sm"; edit.textContent = "Edit";
+                edit.onclick = () => showInput(type);
+                const del = document.createElement("button"); del.className = "btn btn-danger btn-sm"; del.textContent = "Delete";
+                del.onclick = () => deleteScore(type);
+                btns.append(edit, del); header.appendChild(btns); card.appendChild(header);
+
+                const tbl = document.createElement("table"); tbl.className = "table table-sm table-borderless mb-0";
+                let html = `<tr class="table-secondary"><th colspan="2" class="p-2">Term 1</th></tr>`;
+                data[type].term1.forEach((s,i) => html += `<tr class="border-top"><td class="p-2">${term1Subjects[i]}</td><td class="p-2 text-center fw-medium">${s}</td></tr>`);
+                html += `<tr class="table-secondary"><th colspan="2" class="p-2">Term 2</th></tr>`;
+                data[type].term2.forEach((s,i) => html += `<tr class="border-top"><td class="p-2">${term2Subjects[i]}</td><td class="p-2 text-center fw-medium">${s}</td></tr>`);
+                tbl.innerHTML = html;
+                card.appendChild(tbl); wrapper.appendChild(card); div.appendChild(wrapper);
+            }
+        }
+
+        // --- ULTIMATE COMPARE MODAL ---
+        function compareMonthlyScores() {
+            if (Object.keys(allData).length === 0) { alert("No scores saved!"); return; }
+
+            const priority = ['Final Exam','Exam','Midterm','Quiz'];
+            const getScore = (m, sub, term) => {
+                for (const t of priority) {
+                    const d = allData[m]?.[t];
+                    if (d) {
+                        const list = term === 1 ? term1Subjects : term2Subjects;
+                        const idx = list.indexOf(sub);
+                        if (idx > -1 && d[`term${term}`][idx] !== undefined) return d[`term${term}`][idx];
+                    }
+                }
+                return null;
+            };
+
+            const avg = (arr) => arr.reduce((a,b) => a + (b ?? 0), 0) / arr.filter(x => x !== null).length || 0;
+
+            let modalHTML = `
+            <div class="modal fade" id="compareModal" tabindex="-1" data-bs-backdrop="static">
+                <div class="modal-dialog modal-fullscreen-md-down modal-xl">
+                    <div class="modal-content border-0 shadow-lg">
+                        <div class="modal-header bg-gradient text-white" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">
+                            <h5 class="modal-title fw-bold">Compare Scores Across Months</h5>
+                            <div>
+                                <button class="btn btn-sm btn-outline-light me-2" onclick="toggleDark()">Dark Mode</button>
+                                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                        </div>
+                        <div class="modal-body p-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Search</span>
+                                <input type="text" id="searchSubject" class="form-control" placeholder="Subject..." onkeyup="filterAndHighlight()">
+                            </div>
+                            <div class="text-end mb-3">
+                                <button class="btn btn-outline-success btn-sm me-2" onclick="exportCSV()">CSV</button>
+                                <button class="btn btn-outline-danger btn-sm" onclick="exportPDF()">PDF</button>
+                            </div>
+
+                            <ul class="nav nav-tabs mb-3" id="subjectTabs"></ul>
+                            <div class="tab-content" id="tabContent"></div>
+
+                            <div class="mt-3 p-2 bg-light rounded">
+                                <small class="text-muted">
+                                    <strong>Color:</strong> <span class="text-danger">Less than 60</span> | <span class="text-warning">60–79</span> | <span class="text-success">80+</span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+            document.getElementById('compareModal')?.remove();
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            const subjects = [...new Set([...term1Subjects, ...term2Subjects])];
+            const tabs = document.getElementById('subjectTabs');
+            const content = document.getElementById('tabContent');
+
+            subjects.forEach((sub, i) => {
+                const scores1 = months.map(m => getScore(m, sub, 1));
+                const scores2 = months.map(m => getScore(m, sub, 2));
+                const avg1 = avg(scores1).toFixed(1);
+                const avg2 = avg(scores2).toFixed(1);
+
+                tabs.innerHTML += `
+                <li class="nav-item"><button class="nav-link ${i===0?'active':''}" data-bs-toggle="tab" data-bs-target="#tab-${sub}">${sub}</button></li>`;
+
+                content.innerHTML += `
+                <div class="tab-pane fade ${i===0?'show active':''}" id="tab-${sub}">
+                    ${term1Subjects.includes(sub) ? `
+                    <div class="card mb-3 border-primary">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between">
+                            <strong>${sub} — Term 1</strong>
+                            <span class="badge bg-light text-dark score-badge">Avg: ${avg1}</span>
+                        </div>
+                        <div class="card-body p-3">
+                            <div class="chart-container"><canvas id="chart-${sub}-1"></canvas></div>
+                            <div class="row text-center mt-3">
+                                ${months.map((m,j) => {
+                                    const s = scores1[j];
+                                    const cls = s===null ? '' : s>=80 ? 'text-success' : s>=60 ? 'text-warning' : 'text-danger';
+                                    return `<div class="col"><small class="text-muted">${m}</small><div class="${cls} fw-bold">${s??'-'}</div></div>`;
+                                }).join('')}
+                            </div>
+                            <div class="progress mt-2"><div class="progress-bar ${avg1>=80?'bg-success':avg1>=60?'bg-warning':'bg-danger'}" style="width:${avg1}%"></div></div>
+                        </div>
+                    </div>` : ''}
+                    ${term2Subjects.includes(sub) ? `
+                    <div class="card border-success">
+                        <div class="card-header bg-success text-white d-flex justify-content-between">
+                            <strong>${sub} — Term 2</strong>
+                            <span class="badge bg-light text-dark score-badge">Avg: ${avg2}</span>
+                        </div>
+                        <div class="card-body p-3">
+                            <div class="chart-container"><canvas id="chart-${sub}-2"></canvas></div>
+                            <div class="row text-center mt-3">
+                                ${months.map((m,j) => {
+                                    const s = scores2[j];
+                                    const cls = s===null ? '' : s>=80 ? 'text-success' : s>=60 ? 'text-warning' : 'text-danger';
+                                    return `<div class="col"><small class="text-muted">${m}</small><div class="${cls} fw-bold">${s??'-'}</div></div>`;
+                                }).join('')}
+                            </div>
+                            <div class="progress mt-2"><div class="progress-bar ${avg2>=80?'bg-success':avg2>=60?'bg-warning':'bg-danger'}" style="width:${avg2}%"></div></div>
+                        </div>
+                    </div>` : ''}
+                </div>`;
+            });
+
+            // Render Charts
+            subjects.forEach(sub => {
+                if (term1Subjects.includes(sub)) {
+                    new Chart(document.getElementById(`chart-${sub}-1`), {
+                        type: 'line', data: {
+                            labels: months,
+                            datasets: [{ label: sub + ' Term 1', data: months.map(m => getScore(m, sub, 1) ?? null), borderColor: '#0d6efd', tension: 0.3 }]
+                        }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100 } } }
+                    });
+                }
+                if (term2Subjects.includes(sub)) {
+                    new Chart(document.getElementById(`chart-${sub}-2`), {
+                        type: 'line', data: {
+                            labels: months,
+                            datasets: [{ label: sub + ' Term 2', data: months.map(m => getScore(m, sub, 2) ?? null), borderColor: '#198754', tension: 0.3 }]
+                        }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100 } } }
+                    });
+                }
+            });
+
+            window.filterAndHighlight = () => {
+                const q = document.getElementById('searchSubject').value.toLowerCase();
+                document.querySelectorAll('#subjectTabs .nav-link').forEach(tab => {
+                    const text = tab.textContent.toLowerCase();
+                    tab.style.display = text.includes(q) ? '' : 'none';
+                    tab.innerHTML = text.includes(q) ? tab.textContent.replace(new RegExp(q, 'gi'), match => `<span class="highlight">${match}</span>`) : tab.textContent;
+                });
+            };
+
+            window.exportCSV = () => {
+                let csv = "Subject,Term," + months.join(",") + "\n";
+                subjects.forEach(sub => {
+                    if (term1Subjects.includes(sub)) csv += `${sub},Term 1,${months.map(m=>getScore(m,sub,1)??'').join(",")}\n`;
+                    if (term2Subjects.includes(sub)) csv += `${sub},Term 2,${months.map(m=>getScore(m,sub,2)??'').join(",")}\n`;
+                });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+                a.download = 'scores_comparison.csv'; a.click();
+            };
+           window.exportClose = () => {
+                // Start with header
+                let close = "Subject,Term," + months.join(",") + "\n";
+
+                // Add data rows
+                subjects.forEach(sub => {
+                    if (term1Subjects.includes(sub)) {
+                        const row = months.map(m => getScore(m, sub, 1) ?? '').join(",");
+                        close += `${sub},Term 1,${row}\n`;
+                    }
+                    if (term2Subjects.includes(sub)) {
+                        const row = months.map(m => getScore(m, sub, 2) ?? '').join(",");
+                        close += `${sub},Term 2,${row}\n`;
+                    }
+                });
+
+                // Create blob with correct MIME type for .close files
+                const blob = new Blob([close], { type: 'text/plain;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+
+                // Create download link
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'scores_comparison.close'; // Keeps your custom extension
+                link.style.display = 'none';
+
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+
+                // Cleanup
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            };
+
+            window.exportPDF = () => {
+                html2canvas(document.querySelector('#compareModal .modal-body')).then(canvas => {
+                    const img = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF('l', 'mm', 'a4');
+                    pdf.addImage(img, 'PNG', 10, 10, 270, 180);
+                    pdf.save('scores_comparison.pdf');
+                });
+            };
+
+            window.toggleDark = () => {
+                document.querySelector('#compareModal .modal-content').classList.toggle('bg-dark');
+                document.querySelector('#compareModal .modal-content').classList.toggle('text-white');
+                document.querySelectorAll('#compareModal .card').forEach(c => c.classList.toggle('bg-dark'));
+                document.querySelectorAll('#compareModal .card-header').forEach(h => h.classList.toggle('text-white'));
+            };
+
+            new bootstrap.Modal(document.getElementById('compareModal')).show();
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeCircle);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>

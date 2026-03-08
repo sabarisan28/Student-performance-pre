@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📈 Comparison | Student Analyzer</title>
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <script src="/static/js/navbar.js"></script>
+    <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="/static/css/comparison.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="index.html">Student Analyzer</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="/dashboard">🏠 Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="/student-profile">👩‍🎓 Student Management</a></li>
+            <li class="nav-item"><a class="nav-link" href="/subject-analysis">📘 Subject Analysis</a></li>
+            <li class="nav-item"><a class="nav-link" href="/comparison">📈 Comparison</a></li>
+            <li class="nav-item"><a class="nav-link" href="/prediction">🧮 Prediction</a></li>
+            <li class="nav-item"><a class="nav-link" href="/reports">📊 Reports</a></li>
+            <li class="nav-item"><a class="nav-link" href="/teacher-insights">🧑‍🏫 Teacher Insights</a></li>
+            <li class="nav-item"><a class="nav-link" href="/trends">🗓️ Trend</a></li>
+        </ul>
+        </div>
+    </div>
+    </nav>
+
+    <div class="container my-4">
+        <h2 class="text-center mb-5">📊 Student Performance Comparison (Term 1 vs Term 2)</h2>
+        <div class="card p-4 mb-5">
+            <h5 class="text-secondary mb-3">Select Student Name</h5>
+            <div class="row g-3 align-items-center">
+            <div class="col-md-9">
+                <select id="studentSelect" class="form-select">
+                <option value="">-- Choose Student --</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-grid">
+                <button id="compareBtn" class="btn btn-primary">Compare</button>
+            </div>
+            </div>
+        </div>
+        <div id="resultArea" style="display:none;">
+            <div class="card p-4 mb-4">
+                <h5 class="mb-3 text-secondary">📋 Score Comparison Table</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center align-middle table-striped" id="compareTable">
+                    <thead>
+                        <tr>
+                        <th>Subject</th>
+                        <th>Term 1</th>
+                        <th>Term 2</th>
+                        <th>Change</th>
+                        <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card p-4">
+                <h5 class="text-secondary mb-3">📈 Performance Chart</h5>
+                <canvas id="compareChart" height="140"></canvas>
+            </div>
+        </div>
+    </div>
+    <footer class="text-center mt-5">
+        <hr>
+        <p>© 2025 Student Analyzer | Confidential Report</p>
+        <p>
+        <a href="index.html">Home</a> | 
+        <a href="reports.html">Reports</a> | 
+        <a href="contact.html">Contact</a>
+        </p>
+        <p class="social-icons">
+        <a href="#" title="Facebook">📘</a>
+        <a href="#" title="Twitter">🐦</a>
+        <a href="#" title="LinkedIn">💼</a>
+        </p>
+        <p>Made with ❤️ by the Student Analyzer Team</p>
+    </footer>
+    <script>
+    const studentNames = [
+    "PANHA KOEUN","SOPHEA SOPHORN","PISET NEA","SOPHY MOEURN","LIHEANG HENG","PHALLA SUONG",
+    "PHOUN PHAN","RATHANA SOKHA","THALITA SOK","BOREY PENH","RINA HO","CHANTHEA CHHEA",
+    "MAKARA PINN","VICHEKA HAV","SEYHA NY","CHANNY VEN","VICHEKA SOENG","SAMART LUCH",
+    "REAM KHORN","KOEMSEANG PHOEURN","DANE MIOK","VA KHIM KREAN","SAN SVIT","MOLIKA LON",
+    "SOKSEYLA SEN","REACH TALAB","CHHITCHHANUT NANG","SOKKHOEURN LENG","CHANTREA HAN",
+    "SREYDOEURN KEO","SREYDETH KHON","NARITH HEN","SREYPOV HUT","VICHET SAT","SOTHIN KE",
+    "REAKSMEY SAN","DARIKA KIM","SIEVMEY VAN","SINAT LEK","MAKARA PON","LITA SOK",
+    "VISA SAK","PILIP YOM","SAVIN PHUONG","SEREY PHEM","MESARIN M","NITACHHROUN F",
+    "SATANBUNTIT M","VANNALEN M","SREYKEOKEUN F","CHANSAYHAHOEURN M","KRAVANNYOR M",
+    "TOLATIM M","SOPHATS IENG M","SREYVIKVON F","SOPHEAPHAL F","KINGVOEUN M",
+    "CHAMROEUNSONG M","KHOUEN M","SIVSANN M","SREYROTHSANG F","LYSARL M","CHANDYSRIN F",
+    "SREYLEAKSEMF F","SOKKEANGYEANG F","SREYMOMPO F","MESARIN M","ROEURNROS M",
+    "SAMNANGSIM M","SOKNYNIM M","RANITREN F","CHANTHYCHET F","YAPHORN M","KUNTHEAYON F",
+    "SOKYANGLAKK F","MARYSAO F","DARINHILT HAM M"
+    ];
+    const studentSelect = document.getElementById("studentSelect");
+    studentNames.forEach(name => {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    studentSelect.appendChild(opt);
+    });
+    let students = [];
+    studentNames.forEach(name => {
+    students.push({name:name, term:"term1", scores:Array.from({length:6}, ()=>Math.floor(Math.random()*21)+70)});
+    students.push({name:name, term:"term2", scores:Array.from({length:5}, ()=>Math.floor(Math.random()*21)+70)});
+    });
+
+    const term1Subjects = ["BCU","English for IT","General English","Logic","PL","Design"];
+    const term2Subjects = ["English for IT","General English","Algorithm","PL","Web Design"];
+    document.getElementById('compareBtn').addEventListener('click',()=>{
+    const name = studentSelect.value;
+    if(!name) return alert("Please select a student.");
+
+    const term1 = students.find(s=>s.name===name && s.term==='term1');
+    const term2 = students.find(s=>s.name===name && s.term==='term2');
+
+    const tableBody = document.querySelector("#compareTable tbody");
+    tableBody.innerHTML="";
+    const allSubjects = Array.from(new Set([...term1Subjects,...term2Subjects]));
+    const dataT1=[], dataT2=[];
+
+    allSubjects.forEach(subject=>{
+        const t1Index = term1Subjects.indexOf(subject);
+        const t2Index = term2Subjects.indexOf(subject);
+        const val1 = t1Index>=0?term1.scores[t1Index]:"-";
+        const val2 = t2Index>=0?term2.scores[t2Index]:"-";
+        const change = val1!=="-" && val2!=="-"?val2-val1:"-";
+        const color = change>0?"text-success":change<0?"text-danger":"text-secondary";
+
+        tableBody.innerHTML+=`
+        <tr>
+            <td>${subject}</td>
+            <td>${val1}</td>
+            <td>${val2}</td>
+            <td class="${color} fw-bold">${change==="-"?"-":(change>0?"+":"")+change}</td>
+            <td>
+            <button class="btn btn-sm btn-warning editBtn">✏️ Edit</button>
+            <button class="btn btn-sm btn-danger deleteBtn">🗑️ Delete</button>
+            </td>
+        </tr>
+        `;
+        dataT1.push(val1==="-"?0:val1);
+        dataT2.push(val2==="-"?0:val2);
+    });
+
+    document.getElementById("resultArea").style.display="block";
+    drawChart(allSubjects,dataT1,dataT2,name);
+    attachRowEvents();
+    });
+    let chartInstance = null;
+    function drawChart(labels,dataT1,dataT2,name){
+    const ctx=document.getElementById('compareChart').getContext('2d');
+    if(chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(ctx,{
+        type:'radar',
+        data:{labels,datasets:[
+        {label:'Term 1',data:dataT1,fill:true,backgroundColor:'rgba(54,162,235,0.3)',borderColor:'rgba(54,162,235,1)'},
+        {label:'Term 2',data:dataT2,fill:true,backgroundColor:'rgba(255,99,132,0.3)',borderColor:'rgba(255,99,132,1)'}
+        ]},
+        options:{
+        responsive:true,
+        scales:{r:{beginAtZero:true,max:100}},
+        plugins:{title:{display:true,text:`Performance Comparison: ${name}`,font:{size:18}},legend:{position:'top'}}
+        }
+    });
+    }
+    function attachRowEvents(){
+    document.querySelectorAll('.editBtn').forEach(btn=>{
+        btn.onclick=function(){
+        const row=this.closest('tr');
+        const term1Cell=row.cells[1];
+        const term2Cell=row.cells[2];
+        term1Cell.contentEditable=true;
+        term2Cell.contentEditable=true;
+        term1Cell.focus();
+        this.textContent="💾 Save";
+        this.classList.replace('btn-warning','btn-success');
+
+        this.onclick=()=>{
+            term1Cell.contentEditable=false;
+            term2Cell.contentEditable=false;
+            this.textContent="✏️ Edit";
+            this.classList.replace('btn-success','btn-warning');
+            const newDataT1=Array.from(document.querySelectorAll('#compareTable tbody tr')).map(r=>parseInt(r.cells[1].textContent)||0);
+            const newDataT2=Array.from(document.querySelectorAll('#compareTable tbody tr')).map(r=>parseInt(r.cells[2].textContent)||0);
+            const labels=Array.from(document.querySelectorAll('#compareTable tbody tr')).map(r=>r.cells[0].textContent);
+            drawChart(labels,newDataT1,newDataT2,studentSelect.value);
+        };
+        };
+    });
+
+    document.querySelectorAll('.deleteBtn').forEach(btn=>{
+        btn.onclick=function(){
+        const row=this.closest('tr');
+        if(confirm("Are you sure you want to delete this row?")){
+            row.remove();
+            const newDataT1=Array.from(document.querySelectorAll('#compareTable tbody tr')).map(r=>parseInt(r.cells[1].textContent)||0);
+            const newDataT2=Array.from(document.querySelectorAll('#compareTable tbody tr')).map(r=>parseInt(r.cells[2].textContent)||0);
+            const labels=Array.from(document.querySelectorAll('#compareTable tbody tr')).map(r=>r.cells[0].textContent);
+            drawChart(labels,newDataT1,newDataT2,studentSelect.value);
+        }
+        };
+    });
+    }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

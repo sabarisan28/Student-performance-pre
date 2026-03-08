@@ -1,0 +1,54 @@
+.card { 
+    border-radius: 15px; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+    transition:0.3s; 
+}
+.card:hover { 
+    transform: translateY(-3px); 
+    box-shadow:0 8px 25px rgba(0,0,0,0.15); 
+}
+
+/* Table styling */
+.table thead th { 
+    position: sticky; 
+    top: 0; z-index:10; 
+    background:#0d6efd; 
+    color:#fff; 
+    text-align:center; 
+}
+.table tbody tr:nth-child(even) { 
+    background: #f9f9f9;
+ 
+}
+.table tbody tr:hover { 
+    background: #e2f0ff; 
+}
+.table td, .table th { 
+    vertical-align: middle; 
+    text-align:center; 
+}
+.text-start { 
+    text-align:left; 
+}
+.score-high { 
+    background:#d4edda; 
+} 
+.score-medium { 
+    background:#fff3cd; 
+} 
+.score-low { 
+    background:#f8d7da; 
+} 
+.title{
+  text-align: center;
+  padding-top: 50px;
+  padding-bottom: 25px;
+  margin: 0px 200px;
+}
+.cademic{
+  color: blue;
+  font-size: 50px;
+}
+.Student{
+  font-size: 18px;
+}

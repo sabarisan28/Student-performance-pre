@@ -1,0 +1,25 @@
+# Flask Web Framework
+flask
+
+# Environment Variables
+python-dotenv
+
+# MySQL Database Connectors
+mysql-connector-python
+pymysql
+
+# Security
+werkzeug
+
+# Data Processing
+pandas
+numpy
+
+# Machine Learning
+scikit-learn
+
+# Model Persistence
+joblib
+
+# Production Server
+gunicorn

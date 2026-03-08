@@ -1,0 +1,30 @@
+/* Footer styling */
+footer {
+    background: #1e3c72;        /* Deep blue background to match your header/navbar */
+    color: #fff;                /* White text for contrast */
+    padding: 30px 20px;         /* Vertical and horizontal padding */
+    text-align: center;         /* Center all content */
+    margin-top: 50px;           /* Space above footer to separate from main content */
+}
+
+footer a {
+    color: #fff;                /* Links are white */
+    text-decoration: none;      /* Remove underline */
+    margin: 0 10px;             /* Horizontal spacing between links */
+}
+
+footer a:hover {
+    text-decoration: underline; /* Add underline on hover for visual feedback */
+}
+
+footer .social-icons a {
+    margin: 0 5px;              /* Space between social icons */
+    display: inline-block;      /* Ensure they stay in a row */
+}
+
+/* Optional: you can make the footer sticky */
+.footer-sticky {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

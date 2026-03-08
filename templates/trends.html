@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📅 Student Performance Trend and Comparison</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <script src="/static/js/navbar.js"></script>
+    <link rel="stylesheet" href="/static/css/footer.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="index.html">Student Analyzer</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/dashboard">🏠 Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/student-profile">👩‍🎓 Student Management</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/subject-analysis">📘 Subject Analysis</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/comparison">📈 Comparison</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/prediction">🧮 Prediction</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/reports">📊 Reports</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/teacher-insights">🧑‍🏫 Teacher Insights</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/trends">🗓️ Trend</a></li>
+                    </ul>
+        </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <div class="card p-4 shadow-lg border-primary">
+            <h4 class="text-primary fw-bold" id="formTitle">➕ Add Student Trend Info</h4>
+            <form id="trendForm">
+                <input type="hidden" id="editIndex" value="-1">
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-3"><input type="text" id="studentName" class="form-control" placeholder="Student Name" required></div>
+                    <div class="col-md-2"><input type="text" id="studentID" class="form-control" placeholder="Student ID" required></div>
+                    <div class="col-md-2"><input type="text" id="studentClass" class="form-control" placeholder="Class/Grade" required></div>
+                    <div class="col-md-2"><input type="text" id="month" class="form-control" placeholder="Month" required></div>
+                    <div class="col-md-3">
+                        <select id="editSubject" class="form-select" disabled style="display:none;">
+                            <option value="">Select Subject (View Only)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold text-secondary border-bottom pb-1 mt-4">📌 Term 1 Scores</h6>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-2"><input type="number" class="form-control" id="t1BCU" placeholder="BCU" min="0" max="100"></div>
+                    <div class="col-md-2"><input type="number" class="form-control" id="t1EngIT" placeholder="English for IT" min="0" max="100"></div>
+                    <div class="col-md-2"><input type="number" class="form-control" id="t1GenEng" placeholder="General English" min="0" max="100"></div>
+                    <div class="col-md-2"><input type="number" class="form-control" id="t1Logic" placeholder="Logic" min="0" max="100"></div>
+                    <div class="col-md-2"><input type="number" class="form-control" id="t1PL" placeholder="PL" min="0" max="100"></div>
+                    <div class="col-md-2"><input type="number" class="form-control" id="t1Design" placeholder="Design" min="0" max="100"></div>
+                </div>
+
+                <h6 class="fw-bold text-secondary border-bottom pb-1 mt-4">📌 Term 2 Scores</h6>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-2"><input type="number" class="form-control" id="t2EngIT" placeholder="English for IT" min="0" max="100"></div>
+                    <div class="col-md-2"><input type="number" class="form-control" id="t2GenEng" placeholder="General English" min="0" max="100"></div>
+                    <div class="col-md-2"><input type="number" class="form-control" id="t2Algo" placeholder="Algorithm" min="0" max="100"></div>
+                    <div class="col-md-2"><input type="number" class="form-control" id="t2PL" placeholder="PL" min="0" max="100"></div>
+                    <div class="col-md-2"><input type="number" class="form-control" id="t2Web" placeholder="Web Design" min="0" max="100"></div>
+                    <div class="col-md-2"></div>
+                </div>
+
+                <div class="mb-3">
+                    <textarea id="teacherComment" class="form-control" placeholder="Teacher Comments" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success" id="submitButton">Add Trend Info</button> 
+                <button type="button" class="btn btn-secondary ms-2" id="cancelButton" style="display:none;">Cancel Edit</button>
+            </form>
+        </div>
+
+        <div class="card p-3 shadow-sm mt-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="text-secondary mb-0">📋 Student Trend Records</h5>
+                <input type="text" id="searchInput" class="form-control w-25" placeholder="Search records...">
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-primary">
+                        <tr>
+                            <th data-sort="studentName" class="sortable">Student Name</th>
+                            <th data-sort="studentID" class="sortable">ID</th>
+                            <th data-sort="studentClass" class="sortable">Class</th>
+                            <th data-sort="month" class="sortable">Month</th>
+                            <th data-sort="subject" class="sortable">Subject</th>
+                            <th data-sort="term1" class="sortable">T1 Score</th>
+                            <th data-sort="term2" class="sortable">T2 Score</th>
+                            <th data-sort="average" class="sortable">Average</th>
+                            <th>Comment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trendTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <hr class="mt-5 mb-5">
+        
+        <div class="card p-5 mt-5 chart-card-premium border-info">
+            <h2 class="text-info fw-bold mb-3">
+                <i class="bi bi-graph-up-arrow me-2"></i> Diagraph 1: Student Score Flow (T1 vs T2)
+            </h2>
+            
+            <p class="text-muted chart-subtitle">Select a student to view the **directional trend** of their scores across all subjects from Term 1 $\rightarrow$ Term 2.</p>
+            
+            <div class="d-flex mb-4">
+                <select id="studentFilter" class="form-select w-50 me-3"></select>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="studentFlowChart"></canvas>
+            </div>
+        </div>
+        <div class="card p-5 mt-5 chart-card-premium border-success">
+            <h2 class="text-success fw-bold mb-3">
+                <i class="bi bi-bar-chart me-2"></i> Diagraph 2: Subject Term Comparison
+            </h2>
+            <p class="text-muted chart-subtitle">Grouped bars comparing the **average** performance in Term 1 vs Term 2 for all subjects.</p>
+            <div class="chart-container">
+                <canvas id="subjectComparisonChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <footer class="text-center mt-5">
+        <hr>
+        <p>© 2025 Student Analyzer | Confidential Report</p>
+        <p>
+        <a href="index.html">Home</a> | 
+        <a href="reports.html">Reports</a> | 
+        <a href="contact.html">Contact</a>
+        </p>
+        <p class="social-icons">
+        <a href="#" title="Facebook">📘</a>
+        <a href="#" title="Twitter">🐦</a>
+        <a href="#" title="LinkedIn">💼</a>
+        </p>
+        <p>Made with ❤️ by the Student Analyzer Team</p>
+    </footer>
+    <script>
+        const SUBJECT_MAP = [
+            {name:"BCU", t1:"t1BCU", t2: null},
+            {name:"English for IT", t1:"t1EngIT", t2:"t2EngIT"},
+            {name:"General English", t1:"t1GenEng", t2:"t2GenEng"},
+            {name:"Logic", t1:"t1Logic", t2: null},
+            {name:"PL", t1:"t1PL", t2:"t2PL"},
+            {name:"Design", t1:"t1Design", t2: null},
+            {name:"Algorithm", t1: null, t2:"t2Algo"},
+            {name:"Web Design", t1: null, t2:"t2Web"}
+        ];
+
+        let currentSort = { column: 'studentName', direction: 'asc' };
+        let allTrends = []; 
+
+        function resetForm() {
+            document.getElementById("trendForm").reset();
+            document.getElementById("editIndex").value = -1;
+            document.getElementById("formTitle").textContent = "➕ Add Student Trend Info";
+            document.getElementById("submitButton").textContent = "Add Trend Info";
+            document.getElementById("submitButton").classList.add("btn-success"); 
+            document.getElementById("submitButton").classList.remove("btn-primary");
+            document.getElementById("cancelButton").style.display = "none";
+            
+            document.querySelectorAll('#trendForm input:not([type="hidden"]), #trendForm textarea').forEach(el => el.disabled = false);
+            document.getElementById("editSubject").style.display = 'none'; 
+        }
+        function renderStudentComparisonChart(studentName) {
+            const ctx = document.getElementById("studentFlowChart").getContext("2d");
+            
+            const studentData = allTrends.filter(t => t.studentName === studentName);
+            const datasets = [];
+            let colorIndex = 0;
+            
+            const subjectScores = {};
+            studentData.forEach(t => {
+                if (!subjectScores[t.subject]) {
+                    subjectScores[t.subject] = { t1: 0, t2: 0 };
+                }
+                subjectScores[t.subject].t1 = t.term1;
+                subjectScores[t.subject].t2 = t.term2;
+            });
+
+            for (const subject in subjectScores) {
+                datasets.push({
+                    label: subject,
+                    data: [subjectScores[subject].t1, subjectScores[subject].t2],
+                    borderColor: getChartColor(colorIndex),
+                    backgroundColor: getChartColor(colorIndex) + '40',
+                    borderWidth: 3,
+                    tension: 0.4, 
+                    fill: false,
+                    pointRadius: 5
+                });
+                colorIndex++;
+            }
+
+            if(window.studentFlowChartInstance) window.studentFlowChartInstance.destroy();
+            if (typeof Chart !== 'undefined') {
+                window.studentFlowChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Term 1 Score', 'Term 2 Score'],
+                        datasets: datasets
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: `${studentName}'s Score Flow: Term 1 \u2192 Term 2` 
+                            }
+                        },
+                        scales: { 
+                            y: { beginAtZero: true, max: 100, title: { display: true, text: 'Score' } },
+                            x: { } 
+                        } 
+                    }
+                });
+            }
+        }
+        function renderSubjectComparisonChart(dataToChart) {
+            const ctx = document.getElementById("subjectComparisonChart").getContext("2d");
+            
+            const subjectAverages = {};
+            dataToChart.forEach(t => {
+                if (!subjectAverages[t.subject]) {
+                    subjectAverages[t.subject] = { t1Sum: 0, t2Sum: 0, t1Count: 0, t2Count: 0 };
+                }
+                if (t.term1 > 0) { subjectAverages[t.subject].t1Sum += t.term1; subjectAverages[t.subject].t1Count++; }
+                if (t.term2 > 0) { subjectAverages[t.subject].t2Sum += t.term2; subjectAverages[t.subject].t2Count++; }
+            });
+            
+            const labels = Object.keys(subjectAverages);
+            const term1Averages = labels.map(sub => 
+                (subjectAverages[sub].t1Count > 0 ? (subjectAverages[sub].t1Sum / subjectAverages[sub].t1Count) : 0).toFixed(2)
+            );
+            const term2Averages = labels.map(sub => 
+                (subjectAverages[sub].t2Count > 0 ? (subjectAverages[sub].t2Sum / subjectAverages[sub].t2Count) : 0).toFixed(2)
+            );
+
+            const datasets = [
+                {
+                    label: 'Term 1 Average Score',
+                    data: term1Averages,
+                    backgroundColor: '#0d6efd', // Primary blue for T1
+                    borderColor: '#0d6efd',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Term 2 Average Score',
+                    data: term2Averages,
+                    backgroundColor: '#198754', // Success green for T2
+                    borderColor: '#198754',
+                    borderWidth: 1
+                }
+            ];
+            if(window.subjectComparisonChartInstance) window.subjectComparisonChartInstance.destroy();
+            if (typeof Chart !== 'undefined') {
+                window.subjectComparisonChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: datasets
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Overall Subject Comparison: Term 1 vs Term 2'
+                            }
+                        },
+                        scales: { 
+                            y: { beginAtZero: true, max: 100, title: { display: true, text: 'Average Score' } }
+                        } 
+                    }
+                });
+            }
+        }
+
+        function getChartColor(index) {
+            const colors = ['#0d6efd', '#dc3545', '#ffc107', '#198754', '#6610f2', '#fd7e14', '#20c997', '#6f42c1'];
+            return colors[index % colors.length];
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            allTrends = JSON.parse(localStorage.getItem("studentTrends")) || [];
+            const searchInput = document.getElementById("searchInput");
+            const studentFilterSelect = document.getElementById("studentFilter");
+
+            function saveTrends() {
+                localStorage.setItem("studentTrends", JSON.stringify(allTrends));
+            }
+
+            function populateStudentFilter() {
+                const studentNames = [...new Set(allTrends.map(t => t.studentName))].filter(name => name);
+                studentFilterSelect.innerHTML = studentNames.map(name => `<option value="${name}">${name}</option>`).join('');
+                
+                if (studentNames.length > 0) {
+                    renderStudentComparisonChart(studentNames[0]);
+                }
+            }
+            
+            function renderTable(filterText = '') {
+                const tbody = document.getElementById("trendTableBody");
+                tbody.innerHTML = "";
+                
+                const lowerCaseFilter = filterText.toLowerCase().trim();
+                const filteredTrends = allTrends.filter(t => {
+                    if (lowerCaseFilter === '') return true;
+                    
+                    return Object.values(t).some(value => 
+                        String(value).toLowerCase().includes(lowerCaseFilter)
+                    );
+                });
+
+                const { column, direction } = currentSort;
+                filteredTrends.sort((a, b) => {
+                    const valA = a[column];
+                    const valB = b[column];
+                    
+                    if (['term1', 'term2', 'average'].includes(column)) {
+                        return direction === 'asc' ? valA - valB : valB - valA;
+                    }
+                    
+                    if (valA < valB) return direction === 'asc' ? -1 : 1;
+                    if (valA > valB) return direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+
+                document.querySelectorAll('th.sortable').forEach(th => {
+                    th.classList.remove('asc', 'desc');
+                    if (th.getAttribute('data-sort') === column) {
+                        th.classList.add(direction);
+                    }
+                });
+                
+                filteredTrends.forEach((t) => {
+                    const originalIndex = allTrends.findIndex(item => item === t);
+                    
+                    tbody.innerHTML += `<tr>
+                        <td>${t.studentName}</td>
+                        <td>${t.studentID}</td>
+                        <td>${t.studentClass}</td>
+                        <td>${t.month}</td>
+                        <td><span class="badge bg-secondary">${t.subject}</span></td>
+                        <td>${t.term1}</td>
+                        <td>${t.term2}</td>
+                        <td><span class="fw-bold text-${t.average >= 70 ? 'success' : 'danger'}">${t.average}</span></td>
+                        <td>${t.teacherComment.substring(0, 30)}${t.teacherComment.length > 30 ? '...' : ''}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success me-1" onclick="editTrend(${originalIndex})">✏️ Edit</button>
+                            <button class="btn btn-sm btn-success" onclick="deleteTrend(${originalIndex})">🗑️ Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                
+                renderSubjectComparisonChart(allTrends);
+            }
+            window.deleteTrend = function(index) {
+                if (confirm(`Are you sure you want to delete the trend record for ${allTrends[index].studentName} (${allTrends[index].subject})?`)) {
+                    allTrends.splice(index, 1);
+                    saveTrends();
+                    renderTable(searchInput.value);
+                    resetForm();
+                }
+            };
+            
+            window.editTrend = function(index) {
+                const record = allTrends[index];
+
+                document.getElementById("editIndex").value = index;
+                document.getElementById("formTitle").textContent = `✍️ Edit Record for ${record.studentName} (${record.subject})`;
+                document.getElementById("submitButton").textContent = "Save Changes";
+                document.getElementById("submitButton").classList.remove("btn-primary");
+                document.getElementById("submitButton").classList.add("btn-success");
+                document.getElementById("cancelButton").style.display = "inline-block";
+                document.getElementById("cancelButton").classList.remove("btn-secondary"); 
+                document.getElementById("cancelButton").classList.add("btn-success"); 
+
+                document.getElementById("studentName").value = record.studentName;
+                document.getElementById("studentID").value = record.studentID;
+                document.getElementById("studentClass").value = record.studentClass;
+                document.getElementById("month").value = record.month; 
+                document.getElementById("teacherComment").value = record.teacherComment;
+
+                const subjectMap = SUBJECT_MAP.find(s => s.name === record.subject);
+                document.querySelectorAll('input[type="number"]').forEach(el => el.value = '');
+
+                if (subjectMap) {
+                    if (subjectMap.t1) document.getElementById(subjectMap.t1).value = record.term1 > 0 ? record.term1 : '';
+                    if (subjectMap.t2) document.getElementById(subjectMap.t2).value = record.term2 > 0 ? record.term2 : '';
+                }
+
+                document.querySelectorAll('input[type="number"]').forEach(el => el.disabled = true);
+                if (subjectMap) {
+                    if (subjectMap.t1) document.getElementById(subjectMap.t1).disabled = false;
+                    if (subjectMap.t2) document.getElementById(subjectMap.t2).disabled = false;
+                }
+
+                document.getElementById("studentName").disabled = true;
+                document.getElementById("studentID").disabled = true;
+                document.getElementById("studentClass").disabled = true;
+                document.getElementById("month").disabled = true; 
+                
+                document.getElementById("editSubject").innerHTML = `<option>${record.subject}</option>`;
+                document.getElementById("editSubject").style.display = 'block'; 
+            };
+            document.getElementById("cancelButton").addEventListener("click", resetForm);
+
+            document.getElementById("trendForm").addEventListener("submit", function(e) {
+                e.preventDefault();
+                const editIndex = parseInt(document.getElementById("editIndex").value);
+                const studentName = document.getElementById("studentName").value;
+                const studentID = document.getElementById("studentID").value;
+                const studentClass = document.getElementById("studentClass").value;
+                const month = document.getElementById("month").value; 
+                const teacherComment = document.getElementById("teacherComment").value;
+
+                if (editIndex > -1) {
+                    // EDIT LOGIC (Kept the same)
+                    const record = allTrends[editIndex];
+                    const subjectMap = SUBJECT_MAP.find(s => s.name === record.subject);
+                    const t1 = subjectMap.t1 ? parseFloat(document.getElementById(subjectMap.t1).value || 0) : 0;
+                    const t2 = subjectMap.t2 ? parseFloat(document.getElementById(subjectMap.t2).value || 0) : 0;
+                    let divisor = 0;
+                    if (subjectMap.t1) divisor++;
+                    if (subjectMap.t2) divisor++;
+                    const average = (divisor > 0) ? ((t1 + t2) / divisor).toFixed(2) : ((t1 + t2)).toFixed(2);
+                    record.term1 = t1;
+                    record.term2 = t2;
+                    record.average = average;
+                    record.teacherComment = teacherComment;
+                    record.month = month;
+                    allTrends[editIndex] = record;
+                    alert(`Record for ${record.studentName} (${record.subject}) updated successfully!`);
+
+                } else {
+                    SUBJECT_MAP.forEach(sub => {
+                        const t1 = sub.t1 ? parseFloat(document.getElementById(sub.t1).value || 0) : 0;
+                        const t2 = sub.t2 ? parseFloat(document.getElementById(sub.t2).value || 0) : 0;
+                        let divisor = 0;
+                        if (sub.t1 && t1 > 0) divisor++;
+                        if (sub.t2 && t2 > 0) divisor++;
+                        const average = (divisor > 0) ? ((t1 + t2) / divisor).toFixed(2) : ((t1 + t2)).toFixed(2);
+                        
+                        if (t1 > 0 || t2 > 0) {
+                            allTrends.push({
+                                studentName, studentID, studentClass, month, 
+                                subject: sub.name, term1: t1, term2: t2, average, teacherComment
+                            });
+                        }
+                    });
+                    alert('New trend records added successfully!');
+                }
+
+                saveTrends();
+                renderTable(searchInput.value);
+                populateStudentFilter();
+                resetForm();
+            });
+
+            searchInput.addEventListener('keyup', () => {
+                renderTable(searchInput.value);
+            });
+
+            studentFilterSelect.addEventListener('change', (e) => {
+                renderStudentComparisonChart(e.target.value);
+            });
+
+            document.querySelectorAll('th.sortable').forEach(header => {
+                header.addEventListener('click', function() {
+                    const newColumn = this.getAttribute('data-sort');
+                    
+                    if (currentSort.column === newColumn) {
+                        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        currentSort.column = newColumn;
+                        currentSort.direction = 'asc';
+                    }
+                    
+                    renderTable(searchInput.value);
+                });
+            });
+            renderTable();
+            populateStudentFilter();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

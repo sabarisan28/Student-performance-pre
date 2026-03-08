@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Analyzer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/reports.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <script src="/static/js/navbar.js"></script>
+    <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="/static/css/Prediction.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="index.html">Student Analyzer</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/dashboard">🏠 Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/student-profile">👩‍🎓 Student Management</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/subject-analysis">📘 Subject Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/comparison">📈 Comparison</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/prediction">🧮 Prediction</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/reports">📊 Reports</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/teacher-insights">🧑‍🏫 Teacher Insights</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/trends">🗓️ Trend</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="messageBox"></div>
+
+    <div class="container">
+        <h1>Student Performance Analyzer 📊</h1>
+        
+        <form id="scoreForm">
+            <div class="form-group">
+                <label for="studentName" >Student Name</label>
+                <select id="studentName" required>
+                    <option value="" disabled selected>Select a student</option>
+                    <option value="PANHA KOEUN">PANHA KOEUN</option>
+                    <option value="SOPHEA SOPHORN">SOPHEA SOPHORN</option>
+                    <option value="PISET NEA">PISET NEA</option>
+                    <option value="SOPHY MOEURN">SOPHY MOEURN</option>
+                    <option value="LIHEANG HENG">LIHEANG HENG</option>
+                    <option value="PHALLA SUONG">PHALLA SUONG</option>
+                    <option value="PHOUN PHAN">PHOUN PHAN</option>
+                    <option value="RATHANA SOKHA">RATHANA SOKHA</option>
+                    <option value="THALITA SOK">THALITA SOK</option>
+                    <option value="BOREY PENH">BOREY PENH</option>
+                    <option value="RINA HO">RINA HO</option>
+                    <option value="CHANTHEA CHHEA">CHANTHEA CHHEA</option>
+                    <option value="MAKARA PINN">MAKARA PINN</option>
+                    <option value="VICHEKA HAV">VICHEKA HAV</option>
+                    <option value="SEYHA NY">SEYHA NY</option>
+                    <option value="CHANNY VEN">CHANNY VEN</option>
+                    <option value="VICHEKA SOENG">VICHEKA SOENG</option>
+                    <option value="SAMART LUCH">SAMART LUCH</option>
+                    <option value="REAM KHORN">REAM KHORN</option>
+                    <option value="KOEMSEANG PHOEURN">KOEMSEANG PHOEURN</option>
+                    <option value="DANE MIOK">DANE MIOK</option>
+                    <option value="VA KHIM KREAN">VA KHIM KREAN</option>
+                    <option value="SAN SVIT">SAN SVIT</option>
+                    <option value="MOLIKA LON">MOLIKA LON</option>
+                    <option value="SOKSEYLA SEN">SOKSEYLA SEN</option>
+                    <option value="REACH TALAB">REACH TALAB</option>
+                    <option value="CHHITCHHANUT NANG">CHHITCHHANUT NANG</option>
+                    <option value="SOKKHOEURN LENG">SOKKHOEURN LENG</option>
+                    <option value="CHANTREA HAN">CHANTREA HAN</option>
+                    <option value="SREYDOEURN KEO">SREYDOEURN KEO</option>
+                    <option value="SREYDETH KHON">SREYDETH KHON</option>
+                    <option value="NARITH HEN">NARITH HEN</option>
+                    <option value="SREYPOV HUT">SREYPOV HUT</option>
+                    <option value="VICHET SAT">VICHET SAT</option>
+                    <option value="SOTHIN KE">SOTHIN KE</option>
+                    <option value="REAKSMEY SAN">REAKSMEY SAN</option>
+                    <option value="DARIKA KIM">DARIKA KIM</option>
+                    <option value="SIEVMEY VAN">SIEVMEY VAN</option>
+                    <option value="SINAT LEK">SINAT LEK</option>
+                    <option value="MAKARA PON">MAKARA PON</option>
+                    <option value="LITA SOK">LITA SOK</option>
+                    <option value="VISA SAK">VISA SAK</option>
+                    <option value="PILIP YOM">PILIP YOM</option>
+                    <option value="SAVIN PHUONG">SAVIN PHUONG</option>
+                    <option value="SEREY PHEM">SEREY PHEM</option>
+                    <option value="MESARIN M">MESARIN M</option>
+                    <option value="NITACHHROUN F">NITACHHROUN F</option>
+                    <option value="SATANBUNTIT M">SATANBUNTIT M</option>
+                    <option value="VANNALEN M">VANNALEN M</option>
+                    <option value="SREYKEOKEUN F">SREYKEOKEUN F</option>
+                    <option value="CHANSAYHAHOEURN M">CHANSAYHAHOEURN M</option>
+                    <option value="KRAVANNYOR M">KRAVANNYOR M</option>
+                    <option value="TOLATIM M">TOLATIM M</option>
+                    <option value="SOPHATS IENG M">SOPHATS IENG M</option>
+                    <option value="SREYVIKVON F">SREYVIKVON F</option>
+                    <option value="SOPHEAPHAL F">SOPHEAPHAL F</option>
+                    <option value="KINGVOEUN M">KINGVOEUN M</option>
+                    <option value="CHAMROEUNSONG M">CHAMROEUNSONG M</option>
+                    <option value="KHOUEN M">KHOUEN M</option>
+                    <option value="SIVSANN M">SIVSANN M</option>
+                    <option value="SREYROTHSANG F">SREYROTHSANG F</option>
+                    <option value="LYSARL M">LYSARL M</option>
+                    <option value="CHANDYSRIN F">CHANDYSRIN F</option>
+                    <option value="SREYLEAKSEMF F">SREYLEAKSEMF F</option>
+                    <option value="SOKKEANGYEANG F">SOKKEANGYEANG F</option>
+                    <option value="SREYMOMPO F">SREYMOMPO F</option>
+                    <option value="MESARIN M">MESARIN M</option>
+                    <option value="ROEURNROS M">ROEURNROS M</option>
+                    <option value="SAMNANGSIM M">SAMNANGSIM M</option>
+                    <option value="SOKNYNIM M">SOKNYNIM M</option>
+                    <option value="RANITREN F">RANITREN F</option>
+                    <option value="CHANTHYCHET F">CHANTHYCHET F</option>
+                    <option value="YAPHORN M">YAPHORN M</option>
+                    <option value="KUNTHEAYON F">KUNTHEAYON F</option>
+                    <option value="SOKYANGLAKK F">SOKYANGLAKK F</option>
+                    <option value="MARYSAO F">MARYSAO F</option>
+                    <option value="DARINHILT HAM M">DARINHILT HAM M</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="studentID">Student ID</label>
+                <input type="text" id="studentID" placeholder="e.g., C2025001">
+            </div>
+
+            <h2>Term 1 Scores (Max 100)</h2>
+            <div class="form-group"><label for="BCU">BCU</label><input type="number" id="BCU" min="0" max="100" placeholder="Score"></div>
+            <div class="form-group"><label for="EngIT_T1">English for IT</label><input type="number" id="EngIT_T1" min="0" max="100" placeholder="Score"></div>
+            <div class="form-group"><label for="GenEng_T1">General English</label><input type="number" id="GenEng_T1" min="0" max="100" placeholder="Score"></div>
+            <div class="form-group"><label for="Logic">Logic</label><input type="number" id="Logic" min="0" max="100" placeholder="Score"></div>
+            <div class="form-group"><label for="PL_T1">PL</label><input type="number" id="PL_T1" min="0" max="100" placeholder="Score"></div>
+            <div class="form-group"><label for="Design">Design</label><input type="number" id="Design" min="0" max="100" placeholder="Score"></div>
+
+            <h2>Term 2 Scores (Max 100)</h2>
+            <div class="form-group"><label for="EngIT_T2">English for IT</label><input type="number" id="EngIT_T2" min="0" max="100" placeholder="Score"></div>
+            <div class="form-group"><label for="GenEng_T2">General English</label><input type="number" id="GenEng_T2" min="0" max="100" placeholder="Score"></div>
+            <div class="form-group"><label for="Algorithm">Algorithm</label><input type="number" id="Algorithm" min="0" max="100" placeholder="Score"></div>
+            <div class="form-group"><label for="PL_T2">PL</label><input type="number" id="PL_T2" min="0" max="100" placeholder="Score"></div>
+            <div class="form-group"><label for="WebDesign">Web Design</label><input type="number" id="WebDesign" min="0" max="100" placeholder="Score"></div>
+
+            <button type="button" onclick="addStudent()">➕ Add Student & Analyze Performance</button>
+        </form>
+
+        <h2>Performance Comparison Table</h2>
+        <table id="resultTable">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>ID</th>
+                    <th>Subject</th>
+                    <th style="text-align: center;">Term 1 Score</th>
+                    <th style="text-align: center;">Term 2 Score</th>
+                    <th>Analysis</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Footer -->
+  <footer class="text-center mt-5">
+    <hr>
+    <p>© 2025 Student Analyzer | Confidential Report</p>
+    <p>
+      <a href="index.html">Home</a> | 
+      <a href="reports.html">Reports</a> | 
+      <a href="contact.html">Contact</a>
+    </p>
+    <p class="social-icons">
+      <a href="#" title="Facebook">📘</a>
+      <a href="#" title="Twitter">🐦</a>
+      <a href="#" title="LinkedIn">💼</a>
+    </p>
+    <p>Made with ❤️ by the Student Analyzer Team</p>
+  </footer>
+
+    <script>
+        const students = [];
+
+        function showMessage(msg) {
+            const box = document.getElementById('messageBox');
+            if (msg.includes("🛑") || msg.includes("⚠️")) {
+                box.style.backgroundColor = '#f8d7da';
+                box.style.color = '#842029';
+            } else {
+                box.style.backgroundColor = '#d1e7dd';
+                box.style.color = '#0f5132';
+            }
+            box.textContent = msg;
+            box.classList.add('show');
+            setTimeout(() => { box.classList.remove('show'); }, 3000);
+        }
+
+        function addStudent() {
+            const name = document.getElementById("studentName").value;
+            const id = document.getElementById("studentID").value.trim();
+            if (!name) { showMessage("🛑 Please select the student's name."); return; }
+
+            const subjects = [
+                { name: "BCU", t1: "BCU", t2: null },
+                { name: "English for IT", t1: "EngIT_T1", t2: "EngIT_T2" },
+                { name: "General English", t1: "GenEng_T1", t2: "GenEng_T2" },
+                { name: "Logic", t1: "Logic", t2: null },
+                { name: "PL", t1: "PL_T1", t2: "PL_T2" },
+                { name: "Design", t1: "Design", t2: null },
+                { name: "Algorithm", t1: null, t2: "Algorithm" },
+                { name: "Web Design", t1: null, t2: "WebDesign" }
+            ];
+
+            const studentData = { name, id, subjects: [], overallTotal: 0, overallCount: 0, t1Total: 0, t1Count: 0, t2Total: 0, t2Count: 0, lowestScore: 101, lowestSubject: "N/A" };
+
+            subjects.forEach(sub => {
+                const t1ScoreInput = document.getElementById(sub.t1)?.value;
+                const t2ScoreInput = document.getElementById(sub.t2)?.value;
+                const t1Score = sub.t1 && t1ScoreInput !== "" ? parseFloat(t1ScoreInput) : null;
+                const t2Score = sub.t2 && t2ScoreInput !== "" ? parseFloat(t2ScoreInput) : null;
+
+                const isValidT1 = t1Score !== null && !isNaN(t1Score) && t1Score >= 0 && t1Score <= 100;
+                const isValidT2 = t2Score !== null && !isNaN(t2Score) && t2Score >= 0 && t2Score <= 100;
+
+                if (sub.t1 && t1ScoreInput !== "" && !isValidT1) { showMessage(`🛑 Invalid score for ${sub.name} (Term 1)`); return; }
+                if (sub.t2 && t2ScoreInput !== "" && !isValidT2) { showMessage(`🛑 Invalid score for ${sub.name} (Term 2)`); return; }
+
+                let comment = "No Data";
+                let commentClass = "same"; 
+
+                if (isValidT1 && isValidT2) {
+                    comment = t2Score > t1Score ? `✅ Better (+${(t2Score - t1Score).toFixed(0)})` : t2Score < t1Score ? `⚠️ Needs Improvement (-${(t1Score - t2Score).toFixed(0)})` : "↔️ Same as Term 1";
+                    commentClass = t2Score !== t1Score ? t2Score > t1Score ? "good" : "needs" : "same";
+                } else if (!isValidT1 && isValidT2) { comment = "✨ New Subject"; commentClass = "good"; }
+                else if (isValidT1 && !isValidT2) { comment = "⏳ Waiting Term 2"; commentClass = "same"; }
+
+                const avgScore = [t1Score, t2Score].filter(s => s !== null).reduce((a,b) => a+b,0) / [t1Score, t2Score].filter(s => s !== null).length || 0;
+                if (avgScore < studentData.lowestScore && avgScore > 0) { studentData.lowestScore = avgScore; studentData.lowestSubject = sub.name; }
+
+                studentData.subjects.push({ name: sub.name, t1Score, t2Score, comment, commentClass });
+                if (isValidT1) { studentData.t1Total += t1Score; studentData.t1Count++; }
+                if (isValidT2) { studentData.t2Total += t2Score; studentData.t2Count++; }
+                if (isValidT1 || isValidT2) { studentData.overallTotal += avgScore; studentData.overallCount++; }
+            });
+
+            students.push(studentData);
+            updateTable();
+            showMessage(`✅ Student ${name} added successfully!`);
+        }
+
+        function updateTable() {
+            const tbody = document.querySelector("#resultTable tbody");
+            tbody.innerHTML = "";
+
+            students.forEach(stu => {
+                stu.subjects.forEach(sub => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${stu.name}</td>
+                        <td>${stu.id}</td>
+                        <td>${sub.name}</td>
+                        <td style="text-align:center">${sub.t1Score !== null ? sub.t1Score : "-"}</td>
+                        <td style="text-align:center">${sub.t2Score !== null ? sub.t2Score : "-"}</td>
+                        <td class="${sub.commentClass}">${sub.comment}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

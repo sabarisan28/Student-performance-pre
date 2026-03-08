@@ -1,0 +1,145 @@
+
+body {
+    background-color: #f8f9fa;
+    padding-top: 20px !important; 
+}
+h1 {
+    color: #0d6efd;
+    margin-top: 80px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+.input-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05); 
+    margin-bottom: 30px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.input-container input {
+    flex-grow: 1;
+}
+#className {
+    max-width: 100px;
+    text-align: center;
+}
+.btn-add {
+    background-color: #198754; 
+    border-color: #198754;
+}
+.btn-add:hover {
+    background-color: #157347;
+}
+
+.btn-save {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+}
+.btn-save:hover {
+    background-color: #0aa5c1;
+}
+
+.btn-cancel {
+    background-color: #6c757d; 
+    border-color: #6c757d;
+    margin-left: 10px;
+}
+.btn-cancel:hover {
+    background-color: #5c636a;
+}
+
+#studentTable {
+    border-radius: 8px;
+    overflow: hidden;
+}
+#studentTable th {
+    background-color: #e9ecef;
+    color: #343a40;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+}
+#studentTable tbody tr:hover {
+    background-color: #f0f3f6;
+    transition: background-color 0.2s;
+}
+#studentTable td, #studentTable th {
+    vertical-align: middle;
+}
+#studentTable td:first-child, #studentTable th:first-child {
+    width: 50px;
+    text-align: center;
+}
+#studentTable td:last-child {
+    width: 150px;
+    text-align: center;
+}
+.btn-edit {
+    padding: 5px 10px;
+    font-size: 0.875rem;
+}
+.btn-delete {
+    padding: 5px 10px;
+    font-size: 0.875rem;
+}
+
+.success-message {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    background-color: #198754;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 2000;
+    font-weight: 600;
+}
+.student-name {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+.student-name.first, 
+.student-name.last {
+    color: rgb(0, 0, 0); 
+}
+.student-name:hover { 
+    background-color: #d3d3d3; 
+}
+.success-message { 
+    margin-bottom: 15px;
+     
+    color: green; 
+    transition: opacity 0.5s; 
+}
+td img { 
+    object-fit: cover; 
+}
+.student-name {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+.student-name.first,
+.student-name.last {
+    color: rgb(0, 0, 0);
+}
+.student-name:hover {
+    background-color: #d3d3d3;
+}
+.success-message {
+    margin-bottom: 15px;
+    color: green;
+    transition: opacity 0.5s;
+}

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📊 Dashboard | Student Analyzer</title>
+  <link rel="stylesheet" href="/static/css/navbar.css">
+  <script src="/static/js/navbar.js"></script>
+  <link rel="stylesheet" href="/static/css/footer.css">
+  <link rel="stylesheet" href="/static/css/dashboard-1.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <link rel="stylesheet" href="/static/css/navbar.css">
+  <script src="/static/js/navbar.js"></script>
+
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="index.html">Student Analyzer</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="/dashboard">🏠 Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="/student-profile">👩‍🎓 Student Management</a></li>
+          <li class="nav-item"><a class="nav-link" href="/subject-analysis">📘 Subject Analysis</a></li>
+          <li class="nav-item"><a class="nav-link" href="/comparison">📈 Comparison</a></li>
+          <li class="nav-item"><a class="nav-link" href="/prediction">🧮 Prediction</a></li>
+          <li class="nav-item"><a class="nav-link" href="/reports">📊 Reports</a></li>
+          <li class="nav-item"><a class="nav-link" href="/teacher-insights">🧑‍🏫 Teacher Insights</a></li>
+          <li class="nav-item"><a class="nav-link" href="/trends">🗓️ Trend</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid mt-4">
+
+  <h1 class="mb-4 text-primary">📊 Student Performance Overview</h1>
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="card border-start border-primary border-5">
+        <div class="card-body text-center">
+          <p>Total Students</p>
+          <h3 class="text-primary" id="totalStudents">77</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-start border-success border-5">
+        <div class="card-body text-center">
+          <p>Overall Avg. Score</p>
+          <h3 class="text-success" id="overallAvgScore">0</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-start border-warning border-5">
+        <div class="card-body text-center">
+          <p>Top Performer</p>
+          <h5 class="text-warning fw-bold" id="topStudent">-</h5>
+          <small id="topScore">(0)</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-start border-info border-5">
+        <div class="card-body text-center">
+          <p>Overall Pass Rate</p>
+          <h3 class="text-info" id="overallPassRate">0%</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-lg-6">
+      <div class="card">
+        
+        <div class="card-header bg-light fw-bold text-primary">📘 Average Scores by Subject</div>
+        <div class="card-body">
+          <canvas id="subjectChart" height="150"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header bg-light fw-bold text-success">📈 Grade Distribution</div>
+        <div class="card-body">
+          <canvas id="gradeChart" height="150"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="title">
+    <h1 class="cademic">Academic performance dashboard</h1>
+    <p class="Student">A Student Scores Table helps teachers track student grades and academic scores in one simple view. It shows student performance clearly, making it easy to spot strengths and weaknesses. Using a student report table, teachers can monitor progress and support students to improve.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header bg-dark text-white fw-bold">🗂 Student Scores Table</div>
+    <div class="card-body table-responsive">
+      <table class="table table-bordered table-hover align-middle text-center" id="studentTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>BCU</th>
+            <th>English IT (T1)</th>
+            <th>General English (T1)</th>
+            <th>Logic</th>
+            <th>PL (T1)</th>
+            <th>Design</th>
+            <th>Total T1</th>
+            <th>Avg T1</th>
+            <th>English IT (T2)</th>
+            <th>General English (T2)</th>
+            <th>Algorithm</th>
+            <th>PL (T2)</th>
+            <th>Web Design</th>
+            <th>Total T2</th>
+            <th>Avg T2</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+  </div> 
+  <footer>
+          <p>© 2025 Student Analyzer. All Rights Reserved.</p>
+          <p>
+              <a href="index.html">Home</a> | 
+              <a href="reports.html">Reports</a> | 
+              <a href="contact.html">Contact</a>
+          </p>
+          <p class="social-icons">
+              <a href="#" title="Facebook">📘</a>
+              <a href="#" title="Twitter">🐦</a>
+              <a href="#" title="LinkedIn">💼</a>
+          </p>
+          <p>Made with ❤️ by the Student Analyzer Team</p>
+      </footer>
+  <script>
+  const studentNames = [
+  "PANHA KOEUN","SOPHEA SOPHORN","PISET NEA","SOPHY MOEURN","LIHEANG HENG","PHALLA SUONG",
+  "PHOUN PHAN","RATHANA SOKHA","THALITA SOK","BOREY PENH","RINA HO","CHANTHEA CHHEA",
+  "MAKARA PINN","VICHEKA HAV","SEYHA NY","CHANNY VEN","VICHEKA SOENG","SAMART LUCH",
+  "REAM KHORN","KOEMSEANG PHOEURN","DANE MIOK","VA KHIM KREAN","SAN SVIT","MOLIKA LON",
+  "SOKSEYLA SEN","REACH TALAB","CHHITCHHANUT NANG","SOKKHOEURN LENG","CHANTREA HAN",
+  "SREYDOEURN KEO","SREYDETH KHON","NARITH HEN","SREYPOV HUT","VICHET SAT","SOTHIN KE",
+  "REAKSMEY SAN","DARIKA KIM","SIEVMEY VAN","SINAT LEK","MAKARA PON","LITA SOK",
+  "VISA SAK","PILIP YOM","SAVIN PHUONG","SEREY PHEM","MESARIN M","NITACHHROUN F",
+  "SATANBUNTIT M","VANNALEN M","SREYKEOKEUN F","CHANSAYHAHOEURN M","KRAVANNYOR M",
+  "TOLATIM M","SOPHATS IENG M","SREYVIKVON F","SOPHEAPHAL F","KINGVOEUN M",
+  "CHAMROEUNSONG M","KHOUEN M","SIVSANN M","SREYROTHSANG F","LYSARL M","CHANDYSRIN F",
+  "SREYLEAKSEMF F","SOKKEANGYEANG F","SREYMOMPO F","MESARIN M","ROEURNROS M",
+  "SAMNANGSIM M","SOKNYNIM M","RANITREN F","CHANTHYCHET F","YAPHORN M","KUNTHEAYON F",
+  "SOKYANGLAKK F","MARYSAO F","DARINHILT HAM M"
+  ];
+
+  let students = [];
+  studentNames.forEach((name, idx)=>{
+    const term1Scores = Array.from({length:6},()=>Math.floor(Math.random()*41+60));
+    const term2Scores = Array.from({length:5},()=>Math.floor(Math.random()*41+60));
+    const studentClass = idx<26?'A':idx<52?'B':'C';
+    students.push(
+      {name, term:'term1', class:studentClass, scores:term1Scores, total:term1Scores.reduce((a,b)=>a+b,0), average:(term1Scores.reduce((a,b)=>a+b)/6).toFixed(2)},
+      {name, term:'term2', class:studentClass, scores:term2Scores, total:term2Scores.reduce((a,b)=>a+b,0), average:(term2Scores.reduce((a,b)=>a+b)/5).toFixed(2)}
+    );
+  });
+  function getScoreClass(score){
+    if(score>=90) return 'score-high';
+    if(score>=80) return 'score-medium';
+    return 'score-low';
+  }
+
+  function renderTable(){
+    const tbody = document.querySelector("#studentTable tbody");
+    tbody.innerHTML = "";
+    studentNames.forEach((name, idx)=>{
+      const t1 = students.find(s=>s.name===name && s.term==='term1');
+      const t2 = students.find(s=>s.name===name && s.term==='term2');
+      tbody.innerHTML += `<tr>
+        <td>${idx+1}</td>
+        <td class="text-start">${name}</td>
+        <td>${t1?.class || t2?.class}</td>
+        ${t1.scores.map(s=>`<td class="${getScoreClass(s)}">${s}</td>`).join('')}
+        <td class="fw-bold">${t1.total}</td>
+        <td class="fw-bold">${t1.average}</td>
+        ${t2.scores.map(s=>`<td class="${getScoreClass(s)}">${s}</td>`).join('')}
+        <td class="fw-bold">${t2.total}</td>
+        <td class="fw-bold">${t2.average}</td>
+      </tr>`;
+    });
+  }
+  renderTable();
+  const allAverages = students.filter(s=>s.term==='term1').map(s=>parseFloat(s.average));
+  const overallAvg = (allAverages.reduce((a,b)=>a+b,0)/allAverages.length).toFixed(2);
+  document.getElementById('overallAvgScore').textContent = overallAvg;
+
+  const topStudent = students.filter(s=>s.term==='term1').sort((a,b)=>b.average-a.average)[0];
+  document.getElementById('topStudent').textContent = topStudent.name;
+  document.getElementById('topScore').textContent = `(${topStudent.average})`;
+
+  const passedCount = students.filter(s=>s.term==='term1' && s.average>=60).length;
+  document.getElementById('overallPassRate').textContent = (passedCount / studentNames.length *100).toFixed(1)+'%';
+  const subjectsT1 = ['BCU','English IT','General English','Logic','PL','Design'];
+  const subjectsT2 = ['English IT','General English','Algorithm','PL','Web Design'];
+
+  const avgScoresT1 = subjectsT1.map((sub,i)=>{ const all = students.filter(s=>s.term==='term1').map(s=>s.scores[i]); return (all.reduce((a,b)=>a+b,0)/all.length).toFixed(2); });
+  const avgScoresT2 = subjectsT2.map((sub,i)=>{ const all = students.filter(s=>s.term==='term2').map(s=>s.scores[i]); return (all.reduce((a,b)=>a+b,0)/all.length).toFixed(2); });
+  const ctx1 = document.getElementById('subjectChart').getContext('2d');
+  new Chart(ctx1,{
+    type:'bar',
+    data:{
+      labels: [...subjectsT1,...subjectsT2],
+      datasets:[
+        {label:'Term 1', data:[...avgScoresT1,...Array(subjectsT2.length).fill(null)], backgroundColor:'rgba(54,162,235,0.6)'},
+        {label:'Term 2', data:[...Array(subjectsT1.length).fill(null), ...avgScoresT2], backgroundColor:'rgba(255,99,132,0.6)'}
+      ]
+    },
+    options:{
+      plugins:{legend:{position:'top'}, datalabels:{color:'#000', anchor:'end', align:'top', formatter:v=>v+'%'}},
+      responsive:true,
+      scales:{y:{beginAtZero:true, max:100}}
+    },
+    plugins:[ChartDataLabels]
+  });
+  const gradeCounts = [
+    students.filter(s=>s.average>=90).length,
+    students.filter(s=>s.average>=80 && s.average<90).length,
+    students.filter(s=>s.average>=70 && s.average<80).length,
+    students.filter(s=>s.average<70).length
+  ];
+  const ctx2 = document.getElementById('gradeChart').getContext('2d');
+  new Chart(ctx2,{
+    type:'doughnut',
+    data:{
+      labels:['A+ (90-100)','A (80-89)','B (70-79)','C/F (<70)'],
+      datasets:[{data:gradeCounts, backgroundColor:['#0d6efd','#198754','#ffc107','#dc3545']}]
+    },
+    options:{
+      plugins:{legend:{position:'right'}, datalabels:{color:'#fff', formatter:(v,p)=>v+' ('+(v/studentNames.length*100).toFixed(1)+'%)'}}
+    },
+    plugins:[ChartDataLabels]
+  });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
